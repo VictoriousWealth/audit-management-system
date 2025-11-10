@@ -1,21 +1,51 @@
 @import "tailwindcss";
 
+/* Default (light) theme colors */
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Clean Audits colors */
+  --color-purple: #5B20A5;
+  --color-teal: #329EA8;
+  --color-offwhite: #F7F9F9;
+  --color-black: #000000;
+  --color-error: #FF0909;
+  --color-success: #57FF09;
+  --color-highlight: #FFFE09;
 }
 
+/* Map them into Tailwind's theme system */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
+  --color-purple: var(--color-purple);
+  --color-teal: var(--color-teal);
+  --color-offwhite: var(--color-offwhite);
+  --color-black: var(--color-black);
+  --color-error: var(--color-error);
+  --color-success: var(--color-success);
+  --color-highlight: var(--color-highlight);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
+/* Auto dark mode via system preference */
+@media (prefers-color-scheme: light) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+
+    /* Dark theme variants */
+    --color-purple: #8A63FF;
+    --color-teal: #4BD0DC;
+    --color-offwhite: #0F111A;
+    --color-black: #FFFFFF;
+    --color-error: #FF5C5C;
+    --color-success: #8FFF6F;
+    --color-highlight: #FFFF66;
   }
 }
 
