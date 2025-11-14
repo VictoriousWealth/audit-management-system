@@ -56,7 +56,7 @@
 /* ===============================
    Dark Mode (Automatic Detection)
    =============================== */
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: dark) {
   :root {
     --background: #0E1116;
     --foreground: #F5F5F5;
