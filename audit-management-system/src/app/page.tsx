@@ -6,12 +6,29 @@ import Footer from "@/components/Footer";
 
 export default function HomePage() {
   return (
-    <main className="bg-offwhite text-black min-h-screen">
+    <main className="bg-background text-foreground min-h-screen transition-colors duration-300">
+      {/* Hero Section */}
       <Hero />
-      <Features />
-      <Testimonials />
-      <CTA />
-      <Footer />
+
+      {/* Features */}
+      <section className="bg-background text-foreground border-t border-border">
+        <Features />
+      </section>
+
+      {/* Testimonials */}
+      <section className="bg-background text-foreground">
+        <Testimonials />
+      </section>
+
+      {/* Call to Action */}
+      <section className="bg-primary text-surface">
+        <CTA />
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-surface border-t border-border text-text-secondary">
+        <Footer />
+      </footer>
     </main>
   );
 }
