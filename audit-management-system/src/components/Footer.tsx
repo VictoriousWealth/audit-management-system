@@ -1,10 +1,10 @@
 export default function Footer() {
   return (
-    <footer className="bg-purple text-white py-8 text-center">
-      <p className="mb-2">
-        © {new Date().getFullYear()} Clean Audits
+    <footer className="bg-primary text-surface py-8 text-center border-t border-border transition-colors duration-300">
+      <p className="mb-2 font-medium">
+        © {new Date().getFullYear()} CleanAudits
       </p>
-      <p className="text-sm opacity-80">
+      <p className="text-sm text-surface/80">
         Building trust in PharmaTech through digital compliance innovation.
       </p>
     </footer>
