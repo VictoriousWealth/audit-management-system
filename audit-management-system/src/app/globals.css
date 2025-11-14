@@ -1,56 +1,94 @@
 @import "tailwindcss";
 
-/* Default (light) theme colors */
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ===============================
+   Classic Chic Modern Elite Theme
+   =============================== */
 
-  /* Clean Audits colors */
-  --color-purple: #5B20A5;
-  --color-teal: #329EA8;
-  --color-offwhite: #F7F9F9;
-  --color-black: #000000;
-  --color-error: #FF0909;
-  --color-success: #57FF09;
-  --color-highlight: #FFFE09;
+/* Default (Light Mode) */
+:root {
+  --background: #F7F8FA;
+  --foreground: #1B1B1B;
+
+  /* Core Brand Colors */
+  --color-primary: #1C2A3A;       /* Deep navy blue */
+  --color-secondary: #546E7A;     /* Slate gray */
+  --color-accent: #C8A951;        /* Champagne gold */
+  --color-surface: #FFFFFF;       /* Card background */
+  --color-border: #E0E3E7;        /* Divider / outlines */
+
+  /* Status Colors */
+  --color-success: #2E7D32;       /* Deep forest green */
+  --color-warning: #B26A00;       /* Amber brown */
+  --color-error: #C62828;         /* Refined corporate red */
+  --color-info: #1565C0;          /* Corporate blue */
+
+  /* Text */
+  --text-primary: #1B1B1B;
+  --text-secondary: #5C5C5C;
+
+  /* Shadows & extras */
+  --shadow-color: rgba(0, 0, 0, 0.05);
 }
 
-/* Map them into Tailwind's theme system */
+/* Tailwind mapping */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  --color-purple: var(--color-purple);
-  --color-teal: var(--color-teal);
-  --color-offwhite: var(--color-offwhite);
-  --color-black: var(--color-black);
-  --color-error: var(--color-error);
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+  --color-accent: var(--color-accent);
+  --color-surface: var(--color-surface);
+  --color-border: var(--color-border);
+
   --color-success: var(--color-success);
-  --color-highlight: var(--color-highlight);
+  --color-warning: var(--color-warning);
+  --color-error: var(--color-error);
+  --color-info: var(--color-info);
+
+  --text-primary: var(--text-primary);
+  --text-secondary: var(--text-secondary);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-/* Auto dark mode via system preference */
+/* ===============================
+   Dark Mode (Automatic Detection)
+   =============================== */
 @media (prefers-color-scheme: light) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0E1116;
+    --foreground: #F5F5F5;
 
-    /* Dark theme variants */
-    --color-purple: #8A63FF;
-    --color-teal: #4BD0DC;
-    --color-offwhite: #0F111A;
-    --color-black: #FFFFFF;
-    --color-error: #FF5C5C;
-    --color-success: #8FFF6F;
-    --color-highlight: #FFFF66;
+    /* Core Brand Colors */
+    --color-primary: #AFCBFF;       /* Muted light navy glow */
+    --color-secondary: #90A4AE;     /* Cool steel */
+    --color-accent: #E7C875;        /* Champagne highlight */
+    --color-surface: #1A1F27;       /* Deep neutral for cards */
+    --color-border: #2A2F36;        /* Soft graphite border */
+
+    /* Status Colors */
+    --color-success: #81C784;       /* Calm mint green */
+    --color-warning: #FFB300;       /* Warm golden amber */
+    --color-error: #EF5350;         /* Balanced coral red */
+    --color-info: #64B5F6;          /* Clear professional blue */
+
+    /* Text */
+    --text-primary: #F5F5F5;
+    --text-secondary: #B0B3B8;
+
+    /* Shadows & extras */
+    --shadow-color: rgba(0, 0, 0, 0.35);
   }
 }
 
+/* ===============================
+   Base Styles
+   =============================== */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  transition: background 0.3s ease, color 0.3s ease;
 }
