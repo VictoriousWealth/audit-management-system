@@ -37,7 +37,7 @@ export default function Hero() {
         </Link>
         <Link
           href="/explore-features"
-          className="inline-block border-3 border-accent text-background bg-primary font-black px-6 py-3 rounded-lg transition-all duration-300 hover:scale-120 ml-4"
+          className="inline-block border-3 border-accent text-background bg-primary font-black px-6 py-3 rounded-lg transition-all duration-300 hover:scale-120 ml-6"
         >
           Explore Features
         </Link> 
