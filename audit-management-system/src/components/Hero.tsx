@@ -35,6 +35,13 @@ export default function Hero() {
         >
           Request a Demo
         </Link>
+        <Link
+          href="/demo"
+          className="inline-block border-3 border-accent text-background bg-primary font-black px-6 py-3 rounded-lg transition-all duration-300 hover:scale-120 ml-4"
+        >
+          Explore Features
+        </Link> 
+        {/* TODO: an interactive high level overview of the platform's features highlighting the benefits*/}
       </div>
     </section>
   );
