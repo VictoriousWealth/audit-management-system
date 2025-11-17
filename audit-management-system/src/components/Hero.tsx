@@ -25,7 +25,7 @@ export default function Hero() {
         </h1>
 
         <p className="text-lg mb-8 text-background/90">
-          Digitally transform compliance and audit management — built for
+          Digitally transform compliance and audit management — built for GMP,
           pharmaceutical excellence, precision, and transparency.
         </p>
 
