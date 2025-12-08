@@ -13,7 +13,7 @@
   --color-primary: #1C2A3A;       /* Deep navy blue */
   --color-secondary: #546E7A;     /* Slate gray */
   --color-accent: #C8A951;        /* Champagne gold */
-  --color-surface: #FFFFFF;       /* Card background */
+  --color-surface: #FFFFFF;       /* Card backgrou2q1`nd */
   --color-border: #E0E3E7;        /* Divider / outlines */
 
   /* Status Colors */
@@ -56,32 +56,6 @@
 /* ===============================
    Dark Mode (Automatic Detection)
    =============================== */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0E1116;
-    --foreground: #F5F5F5;
-
-    /* Core Brand Colors */
-    --color-primary: #AFCBFF;       /* Muted light navy glow */
-    --color-secondary: #90A4AE;     /* Cool steel */
-    --color-accent: #E7C875;        /* Champagne highlight */
-    --color-surface: #1A1F27;       /* Deep neutral for cards */
-    --color-border: #2A2F36;        /* Soft graphite border */
-
-    /* Status Colors */
-    --color-success: #81C784;       /* Calm mint green */
-    --color-warning: #FFB300;       /* Warm golden amber */
-    --color-error: #EF5350;         /* Balanced coral red */
-    --color-info: #64B5F6;          /* Clear professional blue */
-
-    /* Text */
-    --text-primary: #F5F5F5;
-    --text-secondary: #B0B3B8;
-
-    /* Shadows & extras */
-    --shadow-color: rgba(0, 0, 0, 0.35);
-  }
-}
 
 /* ===============================
    Base Styles
