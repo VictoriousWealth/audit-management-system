@@ -77,15 +77,15 @@ export default function Navbar() {
           <>
             <Link
               href="/login"
-              className="border-3 px-5 py-2 pl-7 pr-7 rounded-lg text-sm font-black hover:text-background hover:bg-primary border-primary text-foreground bg-background hover:scale-110 transition"
+              className="border-3 px-5 py-2 pl-7 pr-7 rounded-lg text-sm font-black text-background bg-primary border-primary hover:bg-background hover:text-primary"
               >
               Log in 
             </Link>
             <Link
               href="/register"
-              className="border-3 bg-primary/10 text-accent px-5 py-2 rounded-lg text-sm font-black border-accent hover:border-accent hover:text-background hover:bg-accent transition"
+              className="border-3 hover:bg-background hover:text-accent px-5 py-2 rounded-lg text-sm font-black border-accent hover:border-accent text-background bg-accent transition"
             >
-              Sign Up
+              Sign Me Up
             </Link>
           </>
         )}
