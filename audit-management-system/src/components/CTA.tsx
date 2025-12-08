@@ -13,7 +13,7 @@ export default function CTA() {
 
       <Link
         href="/contact"
-        className="inline-block border-3 border-accent bg-background text-primary font-black px-6 py-3 rounded-lg hover:scale-120 hover:bg-primary hover:text-background duration-150"
+        className="inline-block border-3 border-accent font-black px-6 py-3 rounded-lg bg-primary text-background hover:text-accent"
       >
         Schedule a Consultation
       </Link>
