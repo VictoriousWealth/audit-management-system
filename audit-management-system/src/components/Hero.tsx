@@ -31,13 +31,13 @@ export default function Hero() {
 
         <Link
           href="/demo"
-          className="inline-block border-3 border-accent text-background bg-primary font-black px-6 py-3 rounded-lg transition-all duration-300 hover:scale-120"
+          className="inline-block border-3 border-accent text-background bg-primary font-black px-6 py-3 rounded-lg transition-all duration-300 hover:text-accent"
         >
           Request a Demo
         </Link>
         <Link
           href="/explore-features"
-          className="inline-block border-3 border-accent text-background bg-primary font-black px-6 py-3 rounded-lg transition-all duration-300 hover:scale-120 ml-6"
+          className="inline-block border-3 border-accent text-background bg-primary font-black px-6 py-3 rounded-lg transition-all duration-300 ml-6 hover:text-accent"
         >
           Explore Features
         </Link> 
