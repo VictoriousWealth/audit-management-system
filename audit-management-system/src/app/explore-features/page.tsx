@@ -133,13 +133,13 @@ export default function ExploreFeaturesPage() {
           <div className="flex gap-3 flex-col items-center"> 
             <Link
               href="/demo"
-              className="inline-block border-3 border-accent text-background bg-primary font-black rounded-lg transition-all duration-300 hover:scale-120 p-2 w-max"
+              className="inline-block border-3 border-accent text-background bg-primary font-black rounded-lg transition-all duration-300 p-2 w-max"
             >
               Request a Demo
             </Link>
             <Link
               href="/contact"
-              className="inline-block border-3 border-accent text-background bg-primary font-black rounded-lg transition-all duration-300 hover:scale-120 p-2 w-max"
+              className="inline-block border-3 border-accent text-background bg-primary font-black rounded-lg transition-all duration-300 p-2 w-max"
             >
               Schedule a Consultation
             </Link>
