@@ -16,9 +16,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-background text-foreground">
+      <body className="bg-background text-foreground min-h-screen">
         <Navbar />
-        <main className="pt-24">{children}</main>
+        <main className="pt-24 flex min-h-screen">{children}</main>
       </body>
     </html>
   );
