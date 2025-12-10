@@ -1,32 +1,23 @@
 "use client";
 
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+
 export default function DemoSuccessPage() {
   return (
-    <div className="w-full bg-background text-foreground flex items-center justify-center px-6 py-16">
+    <div className="w-full bg-background text-foreground flex items-center justify-center px-6">
       <div className="max-w-2xl w-full bg-surface border border-border rounded-2xl shadow-subtle p-10 text-center">
-        <div className="relative h-28 mb-8 flex items-center justify-center overflow-visible">
-          <div className="plane-wrapper">
-            <div className="trail" />
-            <svg
-              className="plane"
-              viewBox="0 0 24 24"
-              role="img"
-              aria-label="Paper airplane in flight"
-            >
-              <path
-                d="M2.25 12.25L20.25 4.5c.77-.34 1.54.47 1.2 1.25l-7.46 17c-.33.75-1.43.68-1.65-.1l-2.18-7.73-7.74-2.15c-.8-.22-.88-1.32-.12-1.67Z"
-                fill="var(--color-primary)"
-              />
-            </svg>
-          </div>
-        </div>
+        <DotLottieReact
+          src="https://lottie.host/5f1a26ad-d672-4360-bc10-999c78485db3/FxqtCt4186.lottie"
+          loop
+          autoplay
+        />            
 
         <h1 className="text-4xl font-semibold text-primary mb-4">
           Your personalized demo is on the way
         </h1>
         <p className="text-text-secondary leading-relaxed mb-8">
-          Thanks for reaching out. Our team is preparing a walkthrough tailored
-          to your goals and will contact you shortly to schedule it.
+          Thanks for reaching out. Our team is preparing a time-limited walkthrough tailored
+          to your goals and will contact you shortly to sort it out.
         </p>
 
         <div className="flex justify-center gap-4">
