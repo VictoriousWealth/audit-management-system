@@ -77,7 +77,7 @@ const featureGroups = [
 
 export default function ExploreFeaturesPage() {
   return (
-    <main className="min-h-screen bg-background text-foreground px-6 py-16 md:py-20">
+    <div className="bg-background text-foreground px-6 py-16 md:py-20 w-full">
       <div className="max-w-6xl mx-auto space-y-12">
         <section className="text-center space-y-4">
           <p className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">
@@ -146,6 +146,6 @@ export default function ExploreFeaturesPage() {
           </div>
         </section>
       </div>
-    </main>
+    </div>
   );
 }
