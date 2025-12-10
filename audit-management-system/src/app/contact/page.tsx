@@ -23,7 +23,7 @@ export default function ContactPage() {
   };
 
   return (
-    <main className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center px-6 py-16 transition-colors duration-300">
+    <div className="bg-background text-foreground flex flex-col items-center justify-center px-6 py-16 transition-colors duration-300 w-full">
       <div className="max-w-2xl w-full bg-surface p-10 rounded-2xl shadow-subtle border border-border hover:shadow-lg hover:border-accent/70 transition-all duration-300">
         <h1 className="text-4xl font-semibold text-primary mb-6 text-center">
           Schedule a Consultation
@@ -78,6 +78,6 @@ export default function ContactPage() {
           </button>
         </form>
       </div>
-    </main>
+    </div>
   );
 }
