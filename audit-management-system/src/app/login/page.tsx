@@ -8,25 +8,59 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const existsResponse = await fetch(
+        `/api/users?email=${encodeURIComponent(email)}`
+      );
 
-    if (error) {
-      setError(error.message);
-    } else {
-      window.location.href = "/dashboard"; // redirect after login
+      if (!existsResponse.ok) {
+        setError("Either email and/or password is incorrect.");
+        setLoading(false);
+        return;
+      }
+
+      const { exists } = await existsResponse.json();
+
+      if (!exists) {
+        setError("Either email and/or password is incorrect.");
+        setLoading(false);
+        return;
+      }
+
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (signInError) {
+        const message = signInError.message.toLowerCase();
+        if (message.includes("confirm")) {
+          setError("You did not confirm their email yet.");
+        } else {
+          setError("Either email and/or password is incorrect.");
+        }
+        setLoading(false);
+        return;
+      }
+
+      window.location.href = "/dashboard";
+    } catch (err) {
+      setError("Either email and/or password is incorrect.");
+      setLoading(false);
+      return;
     }
+    setLoading(false);
   };
 
   return (
-    <main className="min-h-screen bg-background text-foreground flex items-center justify-center px-6 py-16">
+    <div className="bg-background text-foreground flex items-center justify-center px-6 py-16 w-full">
       <div className="max-w-md w-full bg-surface p-8 rounded-xl shadow-subtle border border-border">
         <h1 className="text-3xl font-semibold text-primary text-center mb-6">
           Welcome Back
@@ -57,9 +91,10 @@ export default function LoginPage() {
 
           <button
             type="submit"
+            disabled={loading}
             className="w-full bg-primary text-surface font-medium py-3 rounded-lg hover:bg-accent hover:text-background transition"
           >
-            Sign In
+            {loading ? "Signing In..." : "Sign In"}
           </button>
         </form>
 
@@ -70,6 +105,6 @@ export default function LoginPage() {
           </Link>
         </p>
       </div>
-    </main>
+    </div>
   );
 }
