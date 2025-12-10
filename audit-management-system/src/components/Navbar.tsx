@@ -32,6 +32,7 @@ export default function Navbar() {
       setUser(session?.user ?? null);
     });
 
+
     return () => {
       listener.subscription.unsubscribe();
     };
@@ -42,6 +43,8 @@ export default function Navbar() {
     router.push("/login");
   };
 
+  console.log("Logged in User: ", user);
+  
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-4 transition-all duration-300 ${
@@ -63,12 +66,25 @@ export default function Navbar() {
       <div className="flex items-center gap-4">
         {user ? (
           <>
-            <span className="text-sm text-text-secondary">
-              {user.email}
-            </span>
+            <Link href="/profile" className="flex items-center gap-2">
+              <div className="p-5.5 text-center flex h-10 w-10 items-center justify-center rounded-full border-3 border-primary bg-primary/10 text-sm font-semibold uppercase text-primary">
+                {(user.user_metadata.firstName)
+                  .charAt(0)
+                  .toUpperCase()}
+                {(user.user_metadata.middleNames)
+                  .charAt(0)
+                  .toUpperCase()}
+                {(user.user_metadata.surname)
+                  .charAt(0)
+                  .toUpperCase()}
+              </div>
+              <span className="text-sm text-text-secondary">
+                {user.email}
+              </span>
+            </Link>
             <button
               onClick={handleLogout}
-              className="border border-border text-foreground px-5 py-2 rounded-lg text-sm hover:bg-primary hover:text-surface transition"
+              className="border-3 px-5 py-2 pl-7 pr-7 rounded-lg text-sm font-black text-background bg-primary border-primary hover:bg-background hover:text-primary"
             >
               Logout
             </button>
