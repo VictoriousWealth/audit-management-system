@@ -4,11 +4,13 @@ import Testimonials from "@/components/Testimonials";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 
-export default function HomePage() {
+export default async function HomePage() {
+  await new Promise(r => setTimeout(r, 800))
   return (
-    <main className="bg-background text-foreground min-h-screen transition-colors duration-300">
+    <div className="w-full bg-background text-foreground transition-colors duration-300">
       {/* Hero Section */}
       <Hero />
+      
 
       {/* Features */}
       <section className="bg-background text-foreground border-t border-border">
@@ -29,6 +31,6 @@ export default function HomePage() {
       <footer className="bg-surface border-t border-border text-text-secondary">
         <Footer />
       </footer>
-    </main>
+    </div>
   );
 }
