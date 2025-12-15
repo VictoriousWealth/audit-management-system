@@ -1,45 +1,32 @@
 import { MongoClient, Db } from "mongodb";
 
 const uri = process.env.MONGODB_URI;
-const dbName = process.env.MONGODB_DB;
+const dbName = process.env.MONGODB_DB ?? "audit-management";
 
 if (!uri) {
-  throw new Error("Missing MONGODB_URI environment variable");
+  throw new Error("MONGODB_URI is not set");
 }
 
-if (!dbName) {
-  throw new Error("Missing MONGODB_DB environment variable");
-}
+let client: MongoClient | null = null;
+let clientPromise: Promise<MongoClient> | null = null;
 
-let cachedClient: MongoClient | null = null;
-let cachedDb: Db | null = null;
-
-export async function getDb(): Promise<Db> {
-  if (cachedDb && cachedClient) {
-    return cachedDb;
+const getClient = async () => {
+  if (client) return client;
+  if (!clientPromise) {
+    clientPromise = MongoClient.connect(uri).then((c) => {
+      client = c;
+      return c;
+    });
   }
+  return clientPromise;
+};
 
-  console.debug("MongoDB: connecting", { dbName, hasUri: Boolean(uri) });
+export const getDb = async (): Promise<Db> => {
+  const c = await getClient();
+  return c.db(dbName);
+};
 
-  if (uri === "") {
-    throw new Error("MongoDB URI is empty, possibly non-existent");
-  }
-
-  const client = new MongoClient(uri!);
-  await client.connect();
-  const db = client.db(dbName);
-
-  cachedClient = client;
-  cachedDb = db;
-
-  console.debug("MongoDB: connection established", { dbName });
-  return db;
-}
-
-export async function closeDb() {
-  if (cachedClient) {
-    await cachedClient.close();
-    cachedClient = null;
-    cachedDb = null;
-  }
-}
+export const getCollection = async <T = unknown>(name: string) => {
+  const db = await getDb();
+  return db.collection<T>(name);
+};
