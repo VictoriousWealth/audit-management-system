@@ -1,13 +1,20 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function ContactPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     company: "",
-    message: "",
+    role: "",
+    goals: "",
   });
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
+    "idle"
+  );
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -15,11 +22,56 @@ export default function ContactPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    alert("Thank you — our team will contact you shortly for your consultation.");
-    setFormData({ name: "", email: "", company: "", message: "" });
+    setStatus("loading");
+    setError(null);
+
+    const trimmed = {
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      company: formData.company.trim(),
+      role: formData.role.trim(),
+      goals: formData.goals.trim(),
+    };
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(trimmed.email)) {
+      setStatus("error");
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    if (!trimmed.name || !trimmed.company || !trimmed.role || !trimmed.goals) {
+      setStatus("error");
+      setError("Please fill in all required fields.");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/qna-request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(trimmed),
+      });
+
+      if (!response.ok) {
+        const { error: serverError } = await response.json();
+        setStatus("error");
+        setError(serverError || "Failed to submit consultation request");
+        return;
+      }
+
+      setStatus("success");
+      setFormData({ name: "", email: "", company: "", role: "", goals: "" });
+      router.push("/contact/success");
+    } catch (err) {
+      console.error(err);
+      setStatus("error");
+      setError("Could not send your request right now. Please try again.");
+    } finally {
+      setTimeout(() => setStatus("idle"), 3000);
+    }
   };
 
   return (
@@ -38,12 +90,15 @@ export default function ContactPage() {
         <form onSubmit={handleSubmit} className="space-y-6">
           {[
             { label: "Full Name", name: "name", type: "text", required: true },
-            { label: "Company", name: "company", type: "text" },
+            { label: "Company", name: "company", type: "text", required: true },
+            { label: "Role / Position", name: "role", type: "text", required: true },
             { label: "Email Address", name: "email", type: "email", required: true },
           ].map(({ label, name, type, required }) => (
             <div key={name}>
               <label className="block text-sm font-medium text-text-secondary mb-1">
-                {label}
+                <span>{label}</span>
+                {required && <span className="text-error">*</span>}
+                {!required && <span> (Optional)</span>}
               </label>
               <input
                 type={type}
@@ -58,23 +113,35 @@ export default function ContactPage() {
 
           <div>
             <label className="block text-sm font-medium text-text-secondary mb-1">
-              Message
+              What would you like to cover in your consultation?
+              <span className="text-error">*</span>
             </label>
             <textarea
-              name="message"
-              value={formData.message}
+              name="goals"
+              value={formData.goals}
               onChange={handleChange}
               rows={4}
+              required
               placeholder="Tell us about your audit management goals..."
               className="w-full border border-border rounded-lg px-3 py-2.5 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent transition-all"
             />
           </div>
 
+          {status === "success" && (
+            <p className="text-success text-sm text-center">
+              Thanks! We’ll contact you soon to schedule your live Q&A consultation.
+            </p>
+          )}
+          {status === "error" && error && (
+            <p className="text-error text-sm text-center">{error}</p>
+          )}
+
           <button
             type="submit"
+            disabled={status === "loading"}
             className="w-full bg-primary text-surface font-medium py-3 rounded-lg hover:bg-accent hover:text-background transition-all duration-300"
           >
-            Submit
+            {status === "loading" ? "Sending..." : "Submit"}
           </button>
         </form>
       </div>
