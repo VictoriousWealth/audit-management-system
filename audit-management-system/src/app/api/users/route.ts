@@ -1,9 +1,29 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/lib/mongo";
+import { z } from "zod";
+import { getCollection } from "@/lib/mongo";
+
+const userPayloadSchema = z.object({
+  supabaseUserId: z.string().min(1),
+  email: z.string().email(),
+  title: z.string().optional(),
+  firstName: z.string().min(1),
+  middleNames: z.string().optional(),
+  surname: z.string().min(1),
+  role: z.literal("USER").default("USER"),
+});
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+    const parsed = userPayloadSchema.safeParse(body);
+
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Missing or invalid user fields" },
+        { status: 400 }
+      );
+    }
+
     const {
       supabaseUserId,
       email,
@@ -11,7 +31,8 @@ export async function POST(request: Request) {
       firstName,
       middleNames,
       surname,
-    } = body ?? {};
+      role,
+    } = parsed.data;
 
     console.debug("POST /api/users received payload", {
       supabaseUserId,
@@ -22,26 +43,7 @@ export async function POST(request: Request) {
       surname,
     });
 
-    if (!supabaseUserId || !email || !firstName || !surname) {
-      console.debug("POST /api/users missing required fields", {
-        hasSupabaseUserId: Boolean(supabaseUserId),
-        hasEmail: Boolean(email),
-        hasFirstName: Boolean(firstName),
-        hasSurname: Boolean(surname),
-      });
-      return NextResponse.json(
-        { error: "Missing required user fields" },
-        { status: 400 }
-      );
-    }
-
-    console.debug("POST /api/users connecting to DB and collection", {
-      dbName: process.env.MONGODB_DB,
-      collection: "users",
-    });
-
-    const db = await getDb();
-    const usersCollection = db.collection("users");
+    const usersCollection = await getCollection("users");
 
     console.debug("Upserting user in MongoDB", { supabaseUserId });
 
@@ -55,8 +57,15 @@ export async function POST(request: Request) {
           firstName,
           middleNames: middleNames ?? "",
           surname,
+          name: [firstName, middleNames, surname]
+            .filter(Boolean)
+            .join(" ")
+            .replace(/\s+/g, " ")
+            .trim(),
+          role,
           createdAt: new Date(),
         },
+        $set: { updatedAt: new Date() },
       },
       { upsert: true }
     );
@@ -96,8 +105,7 @@ export async function GET(request: Request) {
       );
     }
 
-    const db = await getDb();
-    const usersCollection = db.collection("users");
+    const usersCollection = await getCollection("users");
 
     const user = await usersCollection.findOne({ email });
     const exists = Boolean(user);
