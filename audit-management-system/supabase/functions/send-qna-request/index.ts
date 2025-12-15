@@ -3,7 +3,7 @@ import { Resend } from "npm:resend@4.0.0";
 
 const resendApiKey = Deno.env.get("RESEND_API_KEY");
 const toAddress = Deno.env.get("CONSULTATION_REQUEST_TO") ?? "cleanaudits@nick-efe-oni.dev";
-const fromAddress = Deno.env.get("CONSULTATION_REQUEST_FROM") ?? "CleanAudits <demo@yourdomain.com>";
+const fromAddress = Deno.env.get("CONSULTATION_REQUEST_FROM") ?? "CleanAudits <consultation@yourdomain.com>";
 
 serve(async (req) => {
   if (req.method !== "POST") {
@@ -142,7 +142,6 @@ serve(async (req) => {
                         <p style="margin:0 0 10px;font-size:13px;color:#546E7A;text-transform:uppercase;letter-spacing:0.6px;">Role<br/><span style="display:block;margin-top:4px;color:#1B1B1B;font-size:15px;">${role.charAt(0).toUpperCase()}${role.substring(1).toLowerCase()}</span></p>
                         <p style="margin:0;font-size:13px;color:#546E7A;text-transform:uppercase;letter-spacing:0.6px;">Goals<br/><span style="display:block;margin-top:4px;color:#1B1B1B;font-size:15px;line-height:1.6;">${formattedGoals}</span></p>
                       </div>
-                      <p style="margin:12px 0 0;font-size:16px;font-weight:800;color:#1C2A3A;">Talk soon,<br/><span style="color:#C8A951;">The CleanAudits Team</span></p>
                     </td>
                   </tr>
                 </table>
