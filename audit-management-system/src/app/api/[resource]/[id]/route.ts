@@ -13,13 +13,14 @@ const toObjectId = (id: string) => {
 
 export async function GET(
   _request: Request,
-  { params }: { params: { resource: string; id: string } }
+  { params }: { params: Promise<{ resource: string; id: string }> }
 ) {
-  const config = resourceConfigs[params.resource];
+  const { resource, id } = await params;
+  const config = resourceConfigs[resource];
   if (!config) {
     return NextResponse.json({ error: "Resource not found" }, { status: 404 });
   }
-  const oid = toObjectId(params.id);
+  const oid = toObjectId(id);
   if (!oid) {
     return NextResponse.json({ error: "Invalid id" }, { status: 400 });
   }
@@ -32,13 +33,14 @@ export async function GET(
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { resource: string; id: string } }
+  { params }: { params: Promise<{ resource: string; id: string }> }
 ) {
-  const config = resourceConfigs[params.resource];
+  const { resource, id } = await params;
+  const config = resourceConfigs[resource];
   if (!config) {
     return NextResponse.json({ error: "Resource not found" }, { status: 404 });
   }
-  const oid = toObjectId(params.id);
+  const oid = toObjectId(id);
   if (!oid) {
     return NextResponse.json({ error: "Invalid id" }, { status: 400 });
   }
@@ -75,13 +77,14 @@ export async function PATCH(
 
 export async function DELETE(
   _request: Request,
-  { params }: { params: { resource: string; id: string } }
+  { params }: { params: Promise<{ resource: string; id: string }> }
 ) {
-  const config = resourceConfigs[params.resource];
+  const { resource, id } = await params;
+  const config = resourceConfigs[resource];
   if (!config) {
     return NextResponse.json({ error: "Resource not found" }, { status: 404 });
   }
-  const oid = toObjectId(params.id);
+  const oid = toObjectId(id);
   if (!oid) {
     return NextResponse.json({ error: "Invalid id" }, { status: 400 });
   }
