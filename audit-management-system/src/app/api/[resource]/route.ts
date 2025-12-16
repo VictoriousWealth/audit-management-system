@@ -5,9 +5,10 @@ import { getCollection } from "@/lib/mongo";
 
 export async function GET(
   _request: Request,
-  { params }: { params: { resource: string } }
+  { params }: { params: Promise<{ resource: string }> }
 ) {
-  const config = resourceConfigs[params.resource];
+  const { resource } = await params;
+  const config = resourceConfigs[resource];
   if (!config) {
     return NextResponse.json({ error: "Resource not found" }, { status: 404 });
   }
@@ -19,9 +20,10 @@ export async function GET(
 
 export async function POST(
   request: Request,
-  { params }: { params: { resource: string } }
+  { params }: { params: Promise<{ resource: string }> }
 ) {
-  const config = resourceConfigs[params.resource];
+  const { resource } = await params;
+  const config = resourceConfigs[resource];
   if (!config) {
     return NextResponse.json({ error: "Resource not found" }, { status: 404 });
   }
@@ -31,11 +33,11 @@ export async function POST(
     const withDefaults = config.preprocessCreate
       ? config.preprocessCreate(body)
       : body;
-    const normalized = resolveObjectIdFields(
-      withDefaults,
-      config.objectIdFields
-    );
-    const parsed = config.schema.parse(normalized);
+    const normalized = resolveObjectIdFields(withDefaults, config.objectIdFields);
+    const parsed =
+      resource === "audits" && normalized?.isDraft === true
+        ? config.schema.partial().parse({ ...normalized, isDraft: true })
+        : config.schema.parse(normalized);
     const doc: any = { ...parsed };
     if (parsed._id) {
       doc._id = new ObjectId(parsed._id as any);
