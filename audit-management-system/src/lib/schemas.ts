@@ -71,9 +71,10 @@ export const userSchema = z.object({
 
 export const auditSchema = z.object({
   _id: objectId.optional(),
-  title: z.string(),
+  reference: z.string(),
   companyId: objectId,
   auditeeId: objectId,
+  isDraft: z.boolean().default(false),
   expectedStart: z.date().optional(),
   expectedEnd: z.date().optional(),
   proposedStart: z.date().optional(),
