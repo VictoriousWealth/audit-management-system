@@ -1,12 +1,19 @@
-export function PrimaryActions() {
+type PrimaryActionsProps = {
+  onAddToSchedule?: () => void;
+  savingSchedule?: boolean;
+};
+
+export function PrimaryActions({ onAddToSchedule, savingSchedule }: PrimaryActionsProps) {
   return (
     <>
       <div className="grid grid-cols-3 gap-3">
         <button
           type="button"
+          onClick={onAddToSchedule}
+          disabled={savingSchedule}
           className="border-3 px-3 py-3 rounded-lg text-sm font-semibold border-success bg-success text-background hover:cursor-pointer hover:opacity-70"
         >
-          Add to Schedule
+          {savingSchedule ? "Saving..." : "Add to Schedule"}
         </button>
         <button
           type="button"
