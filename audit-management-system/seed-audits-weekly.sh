@@ -1,6 +1,19 @@
 #!/usr/bin/env bash
 set -e
 
+
+# ------------------------------------------------------------------
+# Safety Guard
+# ------------------------------------------------------------------
+if [[ "$SEED_AUDITS" != "true" ]]; then
+  echo "⏭️  SEED_AUDITS not enabled — skipping"
+  exit 0
+fi
+
+
+# ------------------------------------------------------------------
+# Config
+# ------------------------------------------------------------------
 API_URL="${NEXT_PUBLIC_SITE_URL:-http://localhost:3002}/api/audits"
 
 LEAD_AUDITOR_ID="69411ad72336e49be6addf52"
@@ -38,11 +51,68 @@ SCOPES=(
 START_DATE="2025-12-18"
 END_DATE="2026-02-12"
 
+# ------------------------------------------------------------------
+# OS detection
+# ------------------------------------------------------------------
+OS="$(uname -s)"
+
+if [[ "$OS" == "Darwin" ]]; then
+  IS_MACOS=true
+elif [[ "$OS" == "Linux" ]]; then
+  IS_LINUX=true
+else
+  echo "❌ Unsupported OS: $OS"
+  exit 1
+fi
+
+# ------------------------------------------------------------------
+# Date helpers (BSD vs GNU)
+# ------------------------------------------------------------------
+date_to_epoch() {
+  local date="$1"
+  if [[ "$IS_MACOS" == true ]]; then
+    date -j -f "%Y-%m-%d" "$date" "+%s"
+  else
+    date -d "$date" "+%s"
+  fi
+}
+
+date_add_days() {
+  local date="$1"
+  local days="$2"
+  if [[ "$IS_MACOS" == true ]]; then
+    date -j -v+"$days"d -f "%Y-%m-%d" "$date" "+%Y-%m-%d"
+  else
+    date -d "$date +$days days" "+%Y-%m-%d"
+  fi
+}
+
+date_iso_start() {
+  local date="$1"
+  if [[ "$IS_MACOS" == true ]]; then
+    date -j -f "%Y-%m-%d" "$date" "+%Y-%m-%dT09:00:00.000Z"
+  else
+    date -d "$date 09:00 UTC" "+%Y-%m-%dT%H:%M:%S.000Z"
+  fi
+}
+
+date_iso_end_plus_2d() {
+  local date="$1"
+  if [[ "$IS_MACOS" == true ]]; then
+    date -j -v+2d -f "%Y-%m-%d" "$date" "+%Y-%m-%dT17:00:00.000Z"
+  else
+    date -d "$date +2 days 17:00 UTC" "+%Y-%m-%dT%H:%M:%S.000Z"
+  fi
+}
+
+# ------------------------------------------------------------------
+# Main logic
+# ------------------------------------------------------------------
 current="$START_DATE"
 company_index=0
 
-while [[ "$current" < "$END_DATE" ]]; do
-  audits_this_week=$((RANDOM % 6 + 3)) # 3–8
+while [[ "$(date_to_epoch "$current")" -lt "$(date_to_epoch "$END_DATE")" ]]; do
+  audits_this_week=$((RANDOM % 6 + 3)) # 3–8 audits per week
 
   for ((i=0; i<audits_this_week; i++)); do
     company="${COMPANIES[$company_index]}"
@@ -51,8 +121,8 @@ while [[ "$current" < "$END_DATE" ]]; do
     purpose="${PURPOSES[$RANDOM % ${#PURPOSES[@]}]}"
     scope="${SCOPES[$RANDOM % ${#SCOPES[@]}]}"
 
-    start_iso=$(date -d -f "%Y-%m-%d" "$current" "+%Y-%m-%dT09:00:00.000Z")
-    end_iso=$(date -d -v+2d -f "%Y-%m-%d" "$current" "+%Y-%m-%dT17:00:00.000Z")
+    start_iso="$(date_iso_start "$current")"
+    end_iso="$(date_iso_end_plus_2d "$current")"
 
     echo "Creating audit ($current)"
 
@@ -73,7 +143,7 @@ while [[ "$current" < "$END_DATE" ]]; do
       }" >/dev/null
   done
 
-  current=$(date -d -v+7d -f "%Y-%m-%d" "$current" "+%Y-%m-%d")
+  current="$(date_add_days "$current" 7)"
 done
 
 echo "✅ Weekly audits seeded successfully"
