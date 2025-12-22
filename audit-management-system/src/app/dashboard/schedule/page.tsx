@@ -166,7 +166,7 @@ export default function SchedulePage() {
           const normalizedSupportIds = draft.supportAuditorIds.map((id: any) => normalizeId(id));
           try {
             const fetchedSupport = await Promise.all(
-              normalizedSupportIds.map(async (id) => {
+              normalizedSupportIds.map(async (id: string) => {
                 const res = await fetch(`/api/users_generic/${id}`);
                 if (!res.ok) return { id, name: "" };
                 const user = await res.json();
