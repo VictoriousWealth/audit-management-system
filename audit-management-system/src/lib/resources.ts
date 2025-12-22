@@ -29,6 +29,47 @@ type ResourceConfig = {
 
 const now = () => new Date();
 
+const normalizeDateValue = (value: any) => {
+  if (!value) return value;
+  if (value instanceof Date) return value;
+  if (typeof value === "string") {
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? value : parsed;
+  }
+  if (typeof value === "object" && value.$date) {
+    const parsed = new Date(value.$date);
+    return Number.isNaN(parsed.getTime()) ? value : parsed;
+  }
+  return value;
+};
+
+const normalizeAuditDates = (data: any) => {
+  if (!data) return data;
+  const dateFields = [
+    "expectedStart",
+    "expectedEnd",
+    "proposedStart",
+    "proposedEnd",
+    "actualStart",
+    "actualEnd",
+    "requestLetterSentAt",
+    "requestLetterAcceptedAt",
+    "reportLetterSentAt",
+    "reportLetterApprovedAt",
+    "closureLetterSentAt",
+    "closureDatetime",
+    "createdAt",
+    "updatedAt",
+  ];
+  const next = { ...data };
+  for (const field of dateFields) {
+    if (field in next) {
+      next[field] = normalizeDateValue(next[field]);
+    }
+  }
+  return next;
+};
+
 export const resourceConfigs: Record<string, ResourceConfig> = {
   companies: {
     collection: "companies",
@@ -46,6 +87,7 @@ export const resourceConfigs: Record<string, ResourceConfig> = {
     objectIdFields: [
       "companyId",
       "auditeeId",
+      "auditeeIds",
       "requestLetterId",
       "requestLetterSentById",
       "requestLetterAcceptedById",
@@ -54,12 +96,21 @@ export const resourceConfigs: Record<string, ResourceConfig> = {
       "reportLetterApprovedById",
       "closureLetterId",
     ],
-    preprocessCreate: (data) => ({
-      ...data,
-      createdAt: data.createdAt ?? now(),
-      updatedAt: data.updatedAt ?? now(),
-    }),
-    preprocessUpdate: (data) => ({ ...data, updatedAt: now() }),
+    preprocessCreate: (data) => {
+      const normalized = normalizeAuditDates(data);
+      return {
+        ...normalized,
+        createdAt: normalized.createdAt ?? now(),
+        updatedAt: normalized.updatedAt ?? now(),
+      };
+    },
+    preprocessUpdate: (data) => {
+      const normalized = normalizeAuditDates(data);
+      return {
+        ...normalized,
+        updatedAt: now(),
+      };
+    },
   },
   audit_auditors: {
     collection: "audit_auditors",
@@ -238,12 +289,24 @@ export const resolveObjectIdFields = (payload: any, fields?: string[]) => {
   if (!fields || !payload) return payload;
   const next = { ...payload };
   for (const key of fields) {
-    if (next[key]) {
-      try {
-        next[key] = new ObjectId(next[key]);
-      } catch (_err) {
-        // leave as-is; validation will catch
-      }
+    const value = next[key];
+    if (!value) continue;
+    if (Array.isArray(value)) {
+      next[key] = value.map((entry) => {
+        if (!entry || entry instanceof ObjectId) return entry;
+        try {
+          return new ObjectId(entry);
+        } catch (_err) {
+          return entry;
+        }
+      });
+      continue;
+    }
+    if (value instanceof ObjectId) continue;
+    try {
+      next[key] = new ObjectId(value);
+    } catch (_err) {
+      // leave as-is; validation will catch
     }
   }
   return next;
