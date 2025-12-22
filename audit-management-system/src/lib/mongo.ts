@@ -2,7 +2,7 @@ import { MongoClient, Db } from "mongodb";
 import { Company } from "./schemas";
 
 const uri = process.env.MONGODB_URI;
-const dbName = process.env.MONGODB_DB ?? "audit-management";
+const dbName = process.env.MONGODB_DB ?? "cleanaudits";
 
 if (!uri) {
   throw new Error("MONGODB_URI is not set");
