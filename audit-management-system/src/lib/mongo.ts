@@ -1,4 +1,5 @@
 import { MongoClient, Db } from "mongodb";
+import { Company } from "./schemas";
 
 const uri = process.env.MONGODB_URI;
 const dbName = process.env.MONGODB_DB ?? "audit-management";
@@ -28,5 +29,5 @@ export const getDb = async (): Promise<Db> => {
 
 export const getCollection = async <T = unknown>(name: string) => {
   const db = await getDb();
-  return db.collection<T>(name);
+  return db.collection<Company>(name);
 };
