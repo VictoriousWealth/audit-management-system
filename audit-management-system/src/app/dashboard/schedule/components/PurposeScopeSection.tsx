@@ -1,10 +1,24 @@
-export function PurposeScopeSection() {
+type PurposeScopeSectionProps = {
+  purpose: string;
+  scope: string;
+  onPurposeChange: (value: string) => void;
+  onScopeChange: (value: string) => void;
+};
+
+export function PurposeScopeSection({
+  purpose,
+  scope,
+  onPurposeChange,
+  onScopeChange,
+}: PurposeScopeSectionProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <label className="flex flex-col gap-2">
         <span className="text-sm font-medium">Audit purpose</span>
         <textarea
           name="purpose"
+          value={purpose}
+          onChange={(e) => onPurposeChange(e.target.value)}
           rows={4}
           placeholder="Why this audit is being performed"
           className="border-2 border-border rounded-xl px-3 py-3 bg-surface/70 focus:outline-none focus:ring-2 focus:ring-primary resize-none"
@@ -14,6 +28,8 @@ export function PurposeScopeSection() {
         <span className="text-sm font-medium">Audit scope</span>
         <textarea
           name="scope"
+          value={scope}
+          onChange={(e) => onScopeChange(e.target.value)}
           rows={4}
           placeholder="Processes, sites, or standards covered"
           className="border-2 border-border rounded-xl px-3 py-3 bg-surface/70 focus:outline-none focus:ring-2 focus:ring-primary resize-none"
