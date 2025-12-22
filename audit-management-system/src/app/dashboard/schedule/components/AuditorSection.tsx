@@ -12,18 +12,26 @@ type FetchedAuditor = {
 type AuditorSectionProps = {
   leadAuditor: string;
   updateLeadAuditor: (value: string) => void;
+  leadAuditorId: string;
+  updateLeadAuditorId: (value: string) => void;
   supportAuditors: string[];
+  supportAuditorIds: string[];
   addSupportAuditor: () => void;
   updateSupportAuditor: (index: number, value: string) => void;
+  updateSupportAuditorId: (index: number, id: string) => void;
   auditeeNames: string[];
 };
 
 export function AuditorSection({
   leadAuditor,
   updateLeadAuditor,
+  leadAuditorId,
+  updateLeadAuditorId,
   supportAuditors,
+  supportAuditorIds,
   addSupportAuditor,
   updateSupportAuditor,
+  updateSupportAuditorId,
   auditeeNames,
 }: AuditorSectionProps) {
   const [leadConflict, setLeadConflict] = useState("");
@@ -75,6 +83,7 @@ export function AuditorSection({
       setLeadConflict("");
     }
     updateLeadAuditor(value);
+    updateLeadAuditorId("");
     setOpenSuggestions("lead");
   };
 
@@ -92,6 +101,7 @@ export function AuditorSection({
       });
     }
     updateSupportAuditor(index, value);
+    updateSupportAuditorId(index, "");
     setOpenSuggestions(index);
   };
 
@@ -136,6 +146,7 @@ export function AuditorSection({
                 if (el) wrapperRefs.current.lead = el;
               }}
             >
+              <input type="hidden" name="leadAuditorId" value={leadAuditorId} />
               <input
                 type="text"
                 name="leadAuditor"
@@ -165,6 +176,7 @@ export function AuditorSection({
                           onClick={() => {
                             setLeadConflict("");
                             updateLeadAuditor(option.name);
+                            updateLeadAuditorId(option._id ?? "");
                             setOpenSuggestions(null);
                           }}
                           className="flex w-full flex-col items-start gap-1 px-3 py-2 text-left text-sm hover:bg-surface"
@@ -221,6 +233,11 @@ export function AuditorSection({
                   }}
                 >
                   <input
+                    type="hidden"
+                    name={`supportAuditorId-${index}`}
+                    value={supportAuditorIds[index] ?? ""}
+                  />
+                  <input
                     type="text"
                     name={`supportAuditor-${index}`}
                     placeholder="Support auditor"
@@ -252,6 +269,7 @@ export function AuditorSection({
                                 return next;
                               });
                               updateSupportAuditor(index, option.name);
+                              updateSupportAuditorId(index, option._id ?? "");
                               setOpenSuggestions(null);
                             }}
                             className="flex w-full flex-col items-start gap-1 px-3 py-2 text-left text-sm hover:bg-surface"
