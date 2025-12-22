@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-API_URL="http://localhost:3002/api/audits"
+API_URL="${NEXT_PUBLIC_SITE_URL:-http://localhost:3002}/api/audits"
 
 LEAD_AUDITOR_ID="69411ad72336e49be6addf52"
 SUPPORT_AUDITOR_ID="69411be72336e49be6ade0a6"
@@ -51,8 +51,8 @@ while [[ "$current" < "$END_DATE" ]]; do
     purpose="${PURPOSES[$RANDOM % ${#PURPOSES[@]}]}"
     scope="${SCOPES[$RANDOM % ${#SCOPES[@]}]}"
 
-    start_iso=$(date -j -f "%Y-%m-%d" "$current" "+%Y-%m-%dT09:00:00.000Z")
-    end_iso=$(date -j -v+2d -f "%Y-%m-%d" "$current" "+%Y-%m-%dT17:00:00.000Z")
+    start_iso=$(date -d -f "%Y-%m-%d" "$current" "+%Y-%m-%dT09:00:00.000Z")
+    end_iso=$(date -d -v+2d -f "%Y-%m-%d" "$current" "+%Y-%m-%dT17:00:00.000Z")
 
     echo "Creating audit ($current)"
 
@@ -73,7 +73,7 @@ while [[ "$current" < "$END_DATE" ]]; do
       }" >/dev/null
   done
 
-  current=$(date -j -v+7d -f "%Y-%m-%d" "$current" "+%Y-%m-%d")
+  current=$(date -d -v+7d -f "%Y-%m-%d" "$current" "+%Y-%m-%d")
 done
 
 echo "✅ Weekly audits seeded successfully"
