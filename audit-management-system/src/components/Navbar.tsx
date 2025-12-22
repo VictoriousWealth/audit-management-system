@@ -55,7 +55,7 @@ export default function Navbar() {
     >
       {/* --- Brand --- */}
       <Link
-        href="/"
+        href={user ? "/dashboard" : "/"}
         className="font-semibold text-4xl text-accent hover:text-primary transition-colors"
       >
         <span className="text-accent">Clean</span> 
