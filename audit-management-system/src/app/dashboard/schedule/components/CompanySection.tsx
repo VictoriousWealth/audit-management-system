@@ -11,9 +11,10 @@ type CompanySelection = {
 
 type CompanySectionProps = {
   onSelectionChange?: (selection: CompanySelection) => void;
+  initialSelection?: CompanySelection;
 };
 
-export function CompanySection({ onSelectionChange }: CompanySectionProps) {
+export function CompanySection({ onSelectionChange, initialSelection }: CompanySectionProps) {
   const [showAuditAddress, setShowAuditAddress] = useState(false);
   const [auditAddress, setAuditAddress] = useState("");
   const [companyName, setCompanyName] = useState("");
@@ -57,6 +58,15 @@ export function CompanySection({ onSelectionChange }: CompanySectionProps) {
       auditAddress: showAuditAddress ? auditAddress : "",
     });
   }, [auditAddress, companyAddress, companyName, onSelectionChange, selectedCompanyId, showAuditAddress]);
+
+  useEffect(() => {
+    if (!initialSelection) return;
+    setSelectedCompanyId(initialSelection.id ?? "");
+    setCompanyName(initialSelection.name ?? "");
+    setCompanyAddress(initialSelection.address ?? "");
+    setAuditAddress(initialSelection.auditAddress ?? "");
+    setShowAuditAddress(Boolean(initialSelection.auditAddress));
+  }, [initialSelection?.id]);
 
   const filteredCompanies = companyName.trim()
     ? companies.filter((company) =>
