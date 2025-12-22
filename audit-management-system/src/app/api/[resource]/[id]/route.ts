@@ -11,6 +11,12 @@ const toObjectId = (id: string) => {
   }
 };
 
+const getPartialSchema = (schema: any) => {
+  if (schema?.partial) return schema.partial();
+  if (schema?._def?.schema?.partial) return schema._def.schema.partial();
+  return schema;
+};
+
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ resource: string; id: string }> }
@@ -54,7 +60,7 @@ export async function PATCH(
       withDefaults,
       config.objectIdFields
     );
-    const parsed = config.schema.partial().parse(normalized);
+    const parsed = getPartialSchema(config.schema).parse(normalized);
 
     const collection = await getCollection(config.collection);
     const result = await collection.updateOne(
