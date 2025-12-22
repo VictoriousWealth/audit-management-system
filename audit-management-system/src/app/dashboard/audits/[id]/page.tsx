@@ -63,12 +63,12 @@ export default async function AuditDetailPage({
     leadAuditorId ? fetchJson(`${baseUrlWithProtocol}/api/users_generic/${leadAuditorId}`) : null,
     supportIds.length
       ? Promise.all(
-          supportIds.map((sid) => fetchJson(`${baseUrlWithProtocol}/api/users_generic/${sid}`))
+          supportIds.map((sid: string) => fetchJson(`${baseUrlWithProtocol}/api/users_generic/${sid}`))
         )
       : Promise.resolve([]),
     auditeeIds.length
       ? Promise.all(
-          auditeeIds.map((aid) => fetchJson(`${baseUrlWithProtocol}/api/users_generic/${aid}`))
+          auditeeIds.map((aid: string) => fetchJson(`${baseUrlWithProtocol}/api/users_generic/${aid}`))
         )
       : Promise.resolve([]),
   ]);
