@@ -68,36 +68,51 @@ export const userSchema = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
 });
-
-export const auditSchema = z.object({
-  _id: objectId.optional(),
-  reference: z.string(),
-  companyId: objectId,
-  auditeeId: objectId,
-  isDraft: z.boolean().default(false),
-  expectedStart: z.date().optional(),
-  expectedEnd: z.date().optional(),
-  proposedStart: z.date().optional(),
-  proposedEnd: z.date().optional(),
-  actualStart: z.date().optional(),
-  actualEnd: z.date().optional(),
-  requestLetterId: objectId.optional(),
-  requestLetterSentAt: z.date().optional(),
-  requestLetterSentById: objectId.optional(),
-  requestLetterAcceptedAt: z.date().optional(),
-  requestLetterAcceptedById: objectId.optional(),
-  reportLetterId: objectId.optional(),
-  reportLetterSentAt: z.date().optional(),
-  reportLetterSentById: objectId.optional(),
-  reportLetterApprovedAt: z.date().optional(),
-  reportLetterApprovedById: objectId.optional(),
-  closureLetterId: objectId.optional(),
-  closureLetterSentAt: z.date().optional(),
-  closureLetterSentById: objectId.optional(),
-  closureDatetime: z.date().optional(),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
-});
+export const auditSchema = z
+  .object({
+    _id: objectId.optional(),
+    reference: z.string(),
+    companyId: objectId,
+    auditeeIds: z.array(objectId).min(1).optional(),
+    leadAuditorId: objectId.optional(),
+    supportAuditorIds: z.array(objectId).default([]),
+    purpose: z.string().optional(),
+    scope: z.string().optional(),
+    isDraft: z.boolean().default(false),
+    expectedStart: z.date().optional(),
+    expectedEnd: z.date().optional(),
+    proposedStart: z.date().optional(),
+    proposedEnd: z.date().optional(),
+    actualStart: z.date().optional(),
+    actualEnd: z.date().optional(),
+    requestLetterId: objectId.optional(),
+    requestLetterSentAt: z.date().optional(),
+    requestLetterSentById: objectId.optional(),
+    requestLetterAcceptedAt: z.date().optional(),
+    requestLetterAcceptedById: objectId.optional(),
+    reportLetterId: objectId.optional(),
+    reportLetterSentAt: z.date().optional(),
+    reportLetterSentById: objectId.optional(),
+    reportLetterApprovedAt: z.date().optional(),
+    reportLetterApprovedById: objectId.optional(),
+    closureLetterId: objectId.optional(),
+    closureLetterSentAt: z.date().optional(),
+    closureLetterSentById: objectId.optional(),
+    closureDatetime: z.date().optional(),
+    createdAt: z.date().optional(),
+    updatedAt: z.date().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.isDraft === true) return;
+    const hasAuditees = Array.isArray(data.auditeeIds) && data.auditeeIds.length > 0;
+    if (!hasAuditees) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "At least one auditee is required",
+        path: ["auditeeIds"],
+      });
+    }
+  });
 
 export const auditAuditorSchema = z.object({
   _id: objectId.optional(),
