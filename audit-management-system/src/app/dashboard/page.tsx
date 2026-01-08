@@ -2,10 +2,12 @@ import Link from "next/link";
 import WeekCalendar from "./WeekCalendar";
 
 export default async function DashboardPage() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL!;
-  const baseUrlWithProtocol = baseUrl.startsWith("http")
-    ? baseUrl
-    : `https://${baseUrl}`;
+  const envBaseUrl = process.env.NEXT_PUBLIC_SITE_URL;
+  const vercelUrl = process.env.VERCEL_URL;
+  const rawBaseUrl = envBaseUrl || vercelUrl || "http://localhost:3000";
+  const baseUrlWithProtocol = rawBaseUrl.startsWith("http")
+    ? rawBaseUrl
+    : `https://${rawBaseUrl}`;
 
   const [auditsResponse, companiesResponse, usersResponse] = await Promise.all([
     fetch(`${baseUrlWithProtocol}/api/audits`, { cache: "no-store" }),
